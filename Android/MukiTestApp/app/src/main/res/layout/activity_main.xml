@@ -51,17 +51,21 @@
         android:layout_height="wrap_content"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="Contrast"/>
 
-    <SeekBar
-        android:id="@+id/contrastSeekBar"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="200"/>
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/twitterUsernameEdit"
+        android:hint="Twitter username"
+        android:selectAllOnFocus="true" />
+
+    <TextView
+        android:text="No user set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/twitterUsernameText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,31 +76,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="crop"
-            android:text="Crop"/>
+            android:onClick="send (MainActivity)"
+            android:text="Send to cup"
+            android:elevation="0dp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="reset"
-            android:text="Reset"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="send"
-            android:text="Send"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="clear"
-            android:text="Clear"/>
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/imageSrc"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/debugLogText"
+        android:text="Debug" />
+
 </LinearLayout>
