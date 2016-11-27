@@ -201,18 +201,16 @@ public class MainActivity extends AppCompatActivity {
         float textSize = 15;
 
         if (tweetString.length() > 100) {
-            textSize = 15;
-            for (int i = 1; i < 11; i++) {
-                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
+            for (int i = 1; i < 10; i++) {
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i, "\n").toString();
             }
         } else if (tweetString.length() < 50) {
-            textSize = 15;
             for (int i = 1; i < 6; i++) {
-                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i, "\n").toString();
             }
         } else {
-            for (int i = 1; i < 9; i++ ) {
-                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
+            for (int i = 1; i < 8; i++ ) {
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i, "\n").toString();
             }
         }
         String tweetAsString = tweet.postCreator.toString() + "\n\n" + tweetString;
