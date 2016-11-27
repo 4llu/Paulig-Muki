@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private MukiCupApi mMukiCupApi;
 
 
-    private enum RSSXMLTag {
+    public enum RSSXMLTag {
         TITLE, CREATOR, IGNORETAG, DESCRIPTION;
     }
 
@@ -108,16 +108,17 @@ public class MainActivity extends AppCompatActivity {
         /*reset(null);*/
     }
 
-    private TwitterFeed getTweets () {
+    /*private TwitterFeed getTweets () {
         final String twitterUsername = mTwitterUsernameEdit.getText().toString();
         final TwitterFeed tf = new TwitterFeed();
         // DEBUG
+        tf.username = "Devfeed";
         tf.tweets.add(new Tweet());
         tf.tweets.get(0).postCreator = "Devs";
         tf.tweets.get(0).postTitle = "Error";
         tf.tweets.get(0).postDescription = "Something went wrong";
 
-        /*try {
+        try {
             URL url = new URL("https://twitrss.me/twitter_user_to_rss/?user=" + twitterUsername);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(10*1000);
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                         // Find text between tag
                         String content = xpp.getText();
                         content = content.trim();
-                        if (tweet != null && currentTag != null) {
+                        if (tweet != null) {
                             switch (currentTag) {
                                 case TITLE:
                                     if (content.length() != 0) {
@@ -236,23 +237,56 @@ public class MainActivity extends AppCompatActivity {
             // If http request returns an error
             else {
                 connection.getErrorStream();
+                tf.tweets.get(0).postTitle = "HTTP " + responseCode + " error";
             }
         }
         // If something else goes wrong
         catch (Exception e) {
             e.printStackTrace();
-        }*/
+            tf.tweets.get(0).postDescription = e.toString();
+        }
         return tf;
-    }
+    }*/
 
     public void send(View view) {
         showProgress();
-        TwitterFeed tf = this.getTweets();
-        if (tf.isDefined()) {
-            /*mMukiCupApi.sendImage(this.tweetToImage(tf.tweets.get(0)), new ImageProperties(mContrast), mCupId);*/
-            mDebugLogText.setText(tf.username + "\n\n" + tf.tweets.get(0).postTitle + "\n\n" + tf.tweets.get(0).postDescription);
-        }
-        hideProgress();
+
+        new AsyncTask<String, Void, TwitterFeed>() {
+            @Override
+            protected TwitterFeed doInBackground(String... strings) {
+                try {
+                    /*String serialNumber = strings[0];
+                    return MukiCupApi.cupIdentifierFromSerialNumber(serialNumber);*/
+                    TwitterFeed tf = new TwitterFeed(strings[0]);
+                    tf.getFeed();
+                    return tf;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(TwitterFeed tf) {
+                if (tf != null) {
+                    mTwitterUsername = tf.username;
+                    mTwitterUsernameText.setText(mTwitterUsername);
+                    Tweet tweet;
+                    if (tf.tweets.size() == 1) {
+                        tweet = tf.tweets.get(0);
+                    } else {
+                        tweet = tf.tweets.get(1);
+                    }
+                    mDebugLogText.setText(tweet.postCreator + "\n\n" + tweet.postTitle + "\n\n" + tweet.postDescription);
+                    /*mMukiCupApi.sendImage(this.tweetToImage(tf.tweets.get(0)), new ImageProperties(mContrast), mCupId);*/
+                }
+                else {
+                    mDebugLogText.setText("Something went wrong");
+                }
+
+                hideProgress();
+            }
+        }.execute(mTwitterUsernameEdit.getText().toString());
     }
 
     public void request(View view) {
