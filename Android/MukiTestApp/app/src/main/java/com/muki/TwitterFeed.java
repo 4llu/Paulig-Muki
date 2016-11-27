@@ -80,7 +80,7 @@ public class TwitterFeed {
                         else if (xpp.getName().equals("title")) {
                             currentTag = MainActivity.RSSXMLTag.TITLE;
                         }
-                        else if (xpp.getName().equals("dc:creator")) {
+                        else if (xpp.getName().contains("creator")) {
                             currentTag = MainActivity.RSSXMLTag.CREATOR;
                         }
                         else if (xpp.getName().equals("description")) {

@@ -2,6 +2,7 @@ package com.muki;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.muki.core.model.Action;
 import com.muki.core.model.DeviceInfo;
 import com.muki.core.model.ErrorCode;
 import com.muki.core.model.ImageProperties;
+import com.muki.core.util.ImageUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private String mCupId;
     private String mTwitterUsername;
     private MukiCupApi mMukiCupApi;
+    private Bitmap mImage;
 
 
     public enum RSSXMLTag {
@@ -61,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        mImage = BitmapFactory.decodeResource(getResources(), R.drawable.test_image);
+
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
@@ -136,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     mTwitterUsernameText.setText(mTwitterUsername);
                     Tweet tweet;
                     if (tf.tweets.size() == 1) {
+                    /*if (false) {*/
                         tweet = tf.tweets.get(0);
                     } else {
                         tweet = tf.tweets.get(1);
@@ -190,21 +198,21 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap tweetToImage(Tweet tweet) {
 
         String tweetString = tweet.postDescription;
-        float textSize = 35;
+        float textSize = 15;
 
         if (tweetString.length() > 100) {
-            textSize = 25;
+            textSize = 15;
             for (int i = 1; i < 11; i++) {
-                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
             }
         } else if (tweetString.length() < 50) {
-            textSize = 50;
+            textSize = 15;
             for (int i = 1; i < 6; i++) {
-                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
             }
         } else {
             for (int i = 1; i < 9; i++ ) {
-                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+                tweetString = new StringBuilder(tweetString).insert((tweetString.length() - 1) / i + i, "\n").toString();
             }
         }
         String tweetAsString = tweet.postCreator.toString() + "\n\n" + tweetString;
@@ -220,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
         paint.setColor(Color.BLACK);
         paint.setTextSize(textSize);
         canvas.drawText(tweetAsString, 20, 30, paint);
-        return newImage;
+        /*return newImage;*/
+        return mImage;
     }
 
     private void showProgress() {
