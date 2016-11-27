@@ -2,6 +2,7 @@ package com.muki;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,10 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.graphics.Paint;
+import android.graphics.Color;
+import android.graphics.Canvas;
 
 import com.muki.core.MukiCupApi;
 import com.muki.core.MukiCupCallback;
@@ -285,7 +290,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Bitmap tweetToImage(Tweet tweet) {
-        return Bitmap.createBitmap(296, 400, Bitmap.Config.ARGB_8888);
+
+        String tweetString = tweet.postDescription;
+        float textSize = 35;
+
+        if (tweetString.length() > 100) {
+            textSize = 25;
+            for (int i = 1; i < 11; i++) {
+                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+            }
+        } else if (tweetString.length() < 50) {
+            textSize = 50;
+            for (int i = 1; i < 6; i++) {
+                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+            }
+        } else {
+            for (int i = 1; i < 9; i++ ) {
+                tweetString = new StringBuilder(tweetString).insert(tweetString.length() / i + i, "\n").toString();
+            }
+        }
+        String tweetAsString = tweet.postCreator.toString() + "\n\n" + tweetString;
+
+        Bitmap newImage = Bitmap.createBitmap(296, 400, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(newImage);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(textSize);
+        canvas.drawText(tweetAsString, 20, 30, paint);
+        return newImage;
     }
 
     private void showProgress() {
